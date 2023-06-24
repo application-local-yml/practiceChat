@@ -1,6 +1,7 @@
 let stompClient = null;
 let fromId = 0;
 let ChatMessageUl = null;
+let ChatMessageTime = null;
 
 function getChatMessages() {
     console.log("fromId : " + fromId);
@@ -48,7 +49,11 @@ function drawMessages(messages) {
             const minutes = String(createdAt.getMinutes()).padStart(2, '0');
             const formattedTime = `${hours}:${minutes}`;
 
-            newItem.innerHTML = `${message.sender.username} : ${message.content} <span class="message-time"><${formattedTime}></span>`;
+            if (message.sender.user_id === memberId) {
+                newItem.innerHTML = `${message.content} <span class="message-time"><${formattedTime}></span>`;
+            } else {
+                newItem.innerHTML = `${message.sender.username} : ${message.content} <span class="message-time"><${formattedTime}></span>`;
+            }
         }
 
         ChatMessageUl.appendChild(newItem);
