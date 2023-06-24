@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.COMMON;
 import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.KICKED;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -140,7 +141,7 @@ public class MeetingController {
 
         model.addAttribute("chatRoom", chatRoom);
         model.addAttribute("chatMemberList", chatMemberList);
-        model.addAttribute("KICKED", KICKED);
+        model.addAttribute("COMMON", COMMON);
         return "usr/meeting/chatMembers";
     }
 

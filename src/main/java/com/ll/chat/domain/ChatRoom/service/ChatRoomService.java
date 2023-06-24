@@ -1,6 +1,7 @@
 package com.ll.chat.domain.ChatRoom.service;
 
 import com.ll.chat.domain.ChatMember.entity.ChatMember;
+import com.ll.chat.domain.ChatMember.entity.ChatMemberType;
 import com.ll.chat.domain.ChatMember.service.ChatMemberService;
 import com.ll.chat.domain.ChatMessage.entity.ChatMessage;
 import com.ll.chat.domain.ChatRoom.dto.ChatRoomDto;
@@ -21,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.COMMON;
 import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.KICKED;
 
 @Service
@@ -92,7 +92,6 @@ public class ChatRoomService {
 
         if (getChatUser(chatRoom, member, memberId).isEmpty()) {
             chatRoom.addChatUser(member);
-            chatRoom.getMeeting().increaseParticipantsCount();
         }
     }
 
@@ -160,8 +159,6 @@ public class ChatRoomService {
         if (chatMember != null) {
             chatMember.exitType();
         }
-
-        chatRoom.getMeeting().decreaseParticipantsCount(); // 유저가 나가면 '현재 참여자 수' 1 감소
     }
 
     private ChatMember findChatMemberByMemberId(ChatRoom chatRoom, Long memberId) {
@@ -200,8 +197,6 @@ public class ChatRoomService {
                 .filter(chatMessage -> chatMessage.getSender().getId().equals(chatMemberId))
                 .forEach(chatMessage -> chatMessage.removeChatMessages("강퇴된 사용자의 메시지입니다."));
 
-        chatRoom.getMeeting().decreaseParticipantsCount(); // 유저가 강퇴되면 '현재 참여자 수' 1 감소
-
         template.convertAndSend("/topic/chats/" + roomId + "/kicked", originMemberId);
     }
 
@@ -234,5 +229,19 @@ public class ChatRoomService {
         log.info("getMemberId = {} ", member.getId());
 
         chatMember.changeMemberCommonType();
+
+    }
+
+    public Long getCommonParticipantsCount(ChatRoom chatRoom) {
+        return chatRoom.getChatMembers().stream()
+                .filter(chatMember -> chatMember.getType().equals(ChatMemberType.COMMON))
+                .count();
+    }
+
+    @Transactional
+    public void changeParticipant(ChatRoom chatRoom) {
+        Long commonParticipantsCount = getCommonParticipantsCount(chatRoom);
+        log.info("commonParticipantsCount = {} ", commonParticipantsCount);
+        chatRoom.getMeeting().setParticipantsCount(commonParticipantsCount);
     }
 }

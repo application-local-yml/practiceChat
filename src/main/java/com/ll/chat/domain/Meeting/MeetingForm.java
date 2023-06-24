@@ -14,7 +14,7 @@ public class MeetingForm {
     private String subject;
 
     @NotNull(message = "모집인원은 필수항목입니다.")
-    private Integer capacity;
+    private Long capacity;
 
     @NotEmpty(message = "모임위치는 필수항목입니다.")
     private String location;

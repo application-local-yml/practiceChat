@@ -84,6 +84,7 @@ public class ChatRoomController {
 
         chatRoomService.updateChatUserType(roomId, member.getId());
 
+        chatRoomService.changeParticipant(chatRoom);
 
         model.addAttribute("chatRoom", chatRoomDto);
         model.addAttribute("member", member);
@@ -121,6 +122,7 @@ public class ChatRoomController {
         }
 
         chatRoomService.exitChatRoom(roomId, member.getId());
+        chatRoomService.changeParticipant(chatRoom);
 
         return "redirect:/usr/meeting/list";
     }
@@ -130,9 +132,13 @@ public class ChatRoomController {
     @DeleteMapping("/{roomId}/kick/{memberId}")
     public String kickChatMember(@PathVariable Long roomId, @PathVariable Long memberId,
                                  @AuthenticationPrincipal SecurityMember member){
+        ChatRoom chatRoom = chatRoomService.findById(roomId);
         chatRoomService.kickChatMember(roomId, memberId, member);
 
         Long chatRoomId = chatMemberService.findById(memberId).getChatRoom().getId();
+
+
+        chatRoomService.changeParticipant(chatRoom);
 
         return ("redirect:/usr/meeting/detail/%d").formatted(chatRoomId);
     }
@@ -151,7 +157,7 @@ public class ChatRoomController {
 
         model.addAttribute("chatMemberList", chatMemberList);
         model.addAttribute("chatRoom", chatRoom);
-        model.addAttribute("KICKED", KICKED);
+        model.addAttribute("COMMON", COMMON);
         return "usr/chat/memberList";
     }
 }

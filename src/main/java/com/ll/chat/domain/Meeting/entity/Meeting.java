@@ -1,5 +1,6 @@
 package com.ll.chat.domain.Meeting.entity;
 
+import com.ll.chat.domain.ChatMember.entity.ChatMemberType;
 import com.ll.chat.domain.ChatRoom.entity.ChatRoom;
 import com.ll.chat.domain.Member.entitiy.Member;
 import com.ll.chat.global.baseEntity.BaseEntity;
@@ -27,14 +28,14 @@ public class Meeting extends BaseEntity {
     private ChatRoom chatRoom;
 
     private String subject;
-    private Integer capacity; // 참여 가능 인원
-    private Integer participantsCount; // 현재 참여자 수
+    private Long capacity; // 참여 가능 인원
+    private Long participantsCount; // 현재 참여자 수
     private String location;
     private String date;
     private String time;
     private String content;
 
-    public RsData update(String subject, Integer capacity, String location, String date, String time, String content) {
+    public RsData update(String subject, Long capacity, String location, String date, String time, String content) {
 
         this.subject = subject;
         this.capacity = capacity;
@@ -46,12 +47,8 @@ public class Meeting extends BaseEntity {
         return RsData.of("S-1", "성공");
     }
 
-    public void increaseParticipantsCount() {
-        this.participantsCount++;
-    }
-
-    public void decreaseParticipantsCount() {
-        this.participantsCount--;
+    public void setParticipantsCount(Long count){
+        this.participantsCount = count;
     }
 
     public boolean canAddParticipant() {

@@ -35,13 +35,13 @@ public class MeetingService {
     }
 
     @Transactional
-    public Meeting create(String subject, Member member, Integer capacity, String location, String date, String time, String content) {
+    public Meeting create(String subject, Member member, Long capacity, String location, String date, String time, String content) {
         Meeting meeting = Meeting
                 .builder()
                 .subject(subject)
                 .member(member)
                 .capacity(capacity)
-                .participantsCount(1)
+                .participantsCount(1L)
                 .location(location)
                 .date(date)
                 .time(time)
@@ -75,7 +75,7 @@ public class MeetingService {
     }
 
     @Transactional
-    public RsData<Meeting> modify(Meeting meeting, String subject, Integer capacity,
+    public RsData<Meeting> modify(Meeting meeting, String subject, Long capacity,
                                   String location, String date, String time, String content) {
 
         meeting.update(subject, capacity, location, date, time, content);
@@ -93,7 +93,7 @@ public class MeetingService {
         return RsData.of("S-1", "모임 수정이 가능합니다.");
     }
 
-    public RsData checkCapacity(Integer capacity, Integer participantsCount) {
+    public RsData checkCapacity(Long capacity, Long participantsCount) {
 
         if(capacity < participantsCount)
             return RsData.of("F-1", "모집인원이 현재 모임 참여자 수보다 적습니다.");
