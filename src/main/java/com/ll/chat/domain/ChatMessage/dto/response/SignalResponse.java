@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignalResponse {
     private SignalType type;
+    private String message;
 }

@@ -74,20 +74,25 @@ public class ChatRoomController {
         ChatRoomDto chatRoomDto = chatRoomService.getByIdAndUserId(roomId, member.getId());
 
         if (chatRoomDto.getType().equals(ROOMIN) || chatRoomDto.getType().equals(EXIT)){
-            chatMessageService.createAndSave(" < " + member.getUsername() + "님이 입장하셨습니다. >", member.getId(), roomId, ENTER);
-            // Enter 로 들어올 경우!
+            // 사용자가 방에 입장할 때 메시지 생성
+            String enterMessage = " < " + member.getUsername() + "님이 입장하셨습니다. >";
+            chatMessageService.createAndSave(enterMessage, member.getId(), roomId, ENTER);
+
+            // 실시간으로 입장 메시지 전송
             SignalResponse signalResponse = SignalResponse.builder()
                     .type(NEW_MESSAGE)
+                    .message(enterMessage)  // 입장 메시지 설정
                     .build();
-            template.convertAndSend("/topic/chats/room/" + chatRoom.getId(), signalResponse);
+
+            template.convertAndSend("/topic/chats/" + chatRoom.getId(), signalResponse);
         }
 
         chatRoomService.updateChatUserType(roomId, member.getId());
-
         chatRoomService.changeParticipant(chatRoom);
 
         model.addAttribute("chatRoom", chatRoomDto);
         model.addAttribute("member", member);
+
 
         return "usr/chat/room";
     }
@@ -113,12 +118,17 @@ public class ChatRoomController {
         ChatRoomDto chatRoomDto = chatRoomService.getByIdAndUserId(roomId, member.getId());
 
         if (chatRoomDto.getType().equals(COMMON)){
-            chatMessageService.createAndSave(" < " + member.getUsername() + "님이 퇴장하셨습니다. >", member.getId(), roomId, LEAVE);
-            // LEAVE 로 들어올 경우!
-            SignalResponse signalResponse = SignalResponse.builder()
+            // 사용자가 방에서 퇴장할 때 메시지 생성
+            String exitMessage = " < " + member.getUsername() + "님이 퇴장하셨습니다. >";
+            chatMessageService.createAndSave(exitMessage, member.getId(), roomId, LEAVE);
+
+            // 실시간으로 퇴장 메시지 전송
+            SignalResponse signalResponseLeave = SignalResponse.builder()
                     .type(NEW_MESSAGE)
+                    .message(exitMessage)  // 퇴장 메시지 설정
                     .build();
-            template.convertAndSend("/topic/chats/room/" + chatRoom.getId(), signalResponse);
+
+            template.convertAndSend("/topic/chats/" + chatRoom.getId(), signalResponseLeave);
         }
 
         chatRoomService.exitChatRoom(roomId, member.getId());
@@ -136,8 +146,6 @@ public class ChatRoomController {
         chatRoomService.kickChatMember(roomId, memberId, member);
 
         Long chatRoomId = chatMemberService.findById(memberId).getChatRoom().getId();
-
-
         chatRoomService.changeParticipant(chatRoom);
 
         return ("redirect:/usr/meeting/detail/%d").formatted(chatRoomId);
