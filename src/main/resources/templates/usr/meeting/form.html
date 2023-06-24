@@ -1,0 +1,91 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
+<head>
+  <title>모임 등록</title>
+  <style>
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    main div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
+    }
+    form {
+      width: 600px;
+    }
+    /* Adjust width for subject and content inputs */
+    input[name="subject"], textarea[name="content"] {
+      width: 100%;
+      max-width: 600px; /* Adjust the max-width as needed */
+    }
+  </style>
+</head>
+
+<body>
+
+<main layout:fragment="main">
+  <script>
+    // Get the current date
+    var today = new Date();
+
+    // Calculate tomorrow's date
+    var tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    // Format tomorrow's date as yyyy-mm-dd
+    var tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+
+    // Set the min attribute of the date input to tomorrow's date
+    document.addEventListener('DOMContentLoaded', function() {
+      var dateInput = document.getElementById('date');
+      dateInput.setAttribute('min', tomorrowFormatted);
+    });
+  </script>
+
+  <form th:object="${meetingForm}" method="post" class="box">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <div class="mb-3">
+      <label for="subject" class="form-label" hidden>제목</label>
+      <input type="text" th:field="*{subject}" size="40" placeholder="모임 이름을 입력하세요!"
+             class="form-control input input-bordered input-lg w-full max-w-xs" required autofocus />
+    </div>
+
+    <div class="mb-3">
+      <label for="capacity" class="badge badge-secondary">인원</label>
+      <input type="number" placeholder="3" min="3" max="20" th:field="*{capacity}" class="form-control input input-bordered input-md" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="date" class="badge badge-secondary">날짜</label>
+      <input type="date" th:field="*{date}" class="form-control input input-bordered input-md" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="time" class="badge badge-secondary">시간</label>
+      <input type="time" th:field="*{time}" class="form-control input input-bordered input-md" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="location" class="badge badge-secondary">장소</label>
+      <input type="text" placeholder="ex) 홍대, 강남 등 지역명" th:field="*{location}" class="form-control input input-bordered input-md" required/>
+    </div>
+
+    <div class="mb-3">
+      <label for="content" class="form-label" hidden>모임소개</label>
+      <textarea th:field="*{content}" placeholder="모임을 소개해주세요 :)"
+                class="form-control textarea textarea-bordered textarea-lg w-full max-w-xs" rows="5" cols="50" required></textarea>
+    </div>
+
+    <div class="submit-button">
+      <input type="submit" value="등록하기" class="btn btn-primary btn-wide" style="font-size: 18px">
+    </div>
+  </form>
+</main>
+
+</body>
+</html>

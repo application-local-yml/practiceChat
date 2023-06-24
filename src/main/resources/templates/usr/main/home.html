@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml" data-theme="night">
+<head>
+    <meta charset="UTF-8">
+    <title>Flex Gym</title>
+    <style>
+        .banner {
+            background-color: #f2f2f2;
+            padding: 10px;
+            height: 250px;
+            width: 2000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: fixed;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .dic {
+            padding: 10px;
+            height: 250px;
+            width: 2000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 55%; /* 수정: 적절한 값으로 조정 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin-bottom: 150px;
+        }
+
+        .dic2 {
+            padding: 10px;
+            height: 250px;
+            width: 2000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 55%; /* 수정: 적절한 값으로 조정 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin-top: 250px;
+            border-top-style: solid;
+            border-top-width: 3px;
+            border-top-color: #f1f1f1;
+        }
+
+        .circle {
+            margin: 0 auto;
+            width: 115px;
+            height: 115px;
+            /*border: 3px solid #f1f1f1;*/
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .recta {
+            /*margin: 0 auto;*/
+            margin-top: 100px;
+            width: 200px;
+            height: 100px;
+            justify-content: center;
+
+        }
+
+        .explain {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 55%; /* 수정: 적절한 값으로 조정 */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .txt {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 41%; /* 수정: 적절한 값으로 조정 */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .txt2 {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dsc {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .chunk {
+            margin-left: 100px;
+            margin-right: 100px;
+        }
+
+        hr {
+            color: #4c51bf;
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px; /* 이미지와 텍스트 사이의 간격을 조정합니다. */
+        }
+
+        .text-container {
+            text-align: left;
+            color: #333333;
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="main" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div class="banner">
+        <div class="banner-content">
+            <div class="text-container">
+                <h1 style="margin-left: 20%; top: 300px">Welcome to our Room</h1>
+                <p>Explore and enjoy our room!</p>
+            </div>
+            <img src="https://i.ibb.co/Z2Ly8f5/19327-removebg-preview.png" alt="19327-removebg-preview" border="0" style="height: 290px; width: 900px; margin-left: 300px;">
+        </div>
+    </div>
+
+    <section>
+        <div class="txt"></div>
+        <div class="explain">
+            <div class="dic">
+                <div class="chunk">
+                    <div class="circle">
+                        <a href="/usr/meeting/list"><img src="https://i.ibb.co/tmGxhMn/friend.png" alt="friend" border="0"></a>
+                    </div>
+
+                    <div class="dsc">
+                        </br>
+                        모임</br></br>
+                        모임에서 함께 운동합시다! </br>
+                        다양한 주제의 운동 모임이 있어요!
+                    </div>
+                </div>
+
+                <div class="chunk">
+                    <div class="circle">
+                        <a href="/usr/board/list">
+<
+                            <img src="https://i.ibb.co/S3hNNBw/01-Icon-Community2x.png" alt="01-Icon-Community2x" border="0">
+                        </a>
+                    </div>
+                    <div class="dsc">
+                        </br>
+                        커뮤니티</br></br>
+                        자유롭게 소통해요!</br>
+                        ★운동꿀팁 대환영★</br>
+                    </div>
+                </div>
+
+                <div class="chunk">
+                    <div class="circle">
+                        <a href="/usr/information/info"><img src="https://i.ibb.co/S6L1S4S/video2.png" alt="video2" border="0"></a>
+                    </div>
+                    <div class="dsc">
+                        </br>
+                        운동영상</br></br>
+                        금주의 핫한 인기 운동영상으로</br>
+                        즐겁게 운동해봐요!</br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
