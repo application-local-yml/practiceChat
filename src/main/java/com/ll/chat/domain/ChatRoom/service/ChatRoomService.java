@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.COMMON;
 import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.KICKED;
 
 @Service
@@ -33,6 +34,7 @@ public class ChatRoomService {
     private final MemberService memberService;
     private final ChatMemberService chatMemberService;
     private final SimpMessageSendingOperations template;
+
 
     @Transactional
     public ChatRoom createAndConnect(String subject, Meeting meeting, Long ownerId) {
@@ -212,5 +214,25 @@ public class ChatRoomService {
         if (!chatRoom.getOwner().getId().equals(owner.getId())) {
             throw new IllegalArgumentException("강퇴 권한이 없습니다.");
         }
+    }
+
+    @Transactional
+    public void updateChatUserType(Long roomId, Long memberId) {
+        ChatRoom chatRoom = chatMemberService.findByRoomId(roomId);
+        Member member = memberService.findByIdElseThrow(memberId);
+
+        UserTypeChange(chatRoom, member);
+    }
+
+    /**
+     * COMMON으로 Type 수정
+     */
+    public void UserTypeChange(ChatRoom chatRoom, Member member) {
+        ChatMember chatMember = chatMemberService.findByChatRoomAndMember(chatRoom, member);
+
+        log.info("chatRoomId = {} ", chatRoom.getId());
+        log.info("getMemberId = {} ", member.getId());
+
+        chatMember.changeMemberCommonType();
     }
 }

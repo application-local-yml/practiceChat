@@ -1,5 +1,6 @@
 package com.ll.chat.global.init;
 
+import com.ll.chat.domain.ChatMember.entity.ChatMember;
 import com.ll.chat.domain.ChatRoom.entity.ChatRoom;
 import com.ll.chat.domain.ChatRoom.service.ChatRoomService;
 import com.ll.chat.domain.Meeting.entity.Meeting;
@@ -28,6 +29,7 @@ public class NotProd {
             public void run(String... args) throws Exception {
                 Member memberUser1 = memberService.join("user1", "1234").getData();
                 Member memberUser2 = memberService.join("user2", "1234").getData();
+                Member memberUser3 = memberService.join("user3", "1234").getData();
 
                 Meeting meeting1 = meetingService.create("오늘 한강에서 러닝하실 분 구합니다!!",
                         memberUser1, 8, "용산구", "2023-07-08", "14:00",
@@ -38,6 +40,8 @@ public class NotProd {
 
                 ChatRoom chatRoom1 = chatRoomService.createAndConnect(meeting1.getSubject(), meeting1, memberUser1.getId());
                 ChatRoom chatRoom2 = chatRoomService.createAndConnect(meeting2.getSubject(), meeting2, memberUser2.getId());
+
+
             }
         };
     }

@@ -1,6 +1,7 @@
 package com.ll.chat.domain.ChatRoom.entity;
 
 import com.ll.chat.domain.ChatMember.entity.ChatMember;
+import com.ll.chat.domain.ChatMember.entity.ChatMemberType;
 import com.ll.chat.domain.ChatMessage.entity.ChatMessage;
 import com.ll.chat.domain.Meeting.entity.Meeting;
 import com.ll.chat.domain.Member.entitiy.Member;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
 

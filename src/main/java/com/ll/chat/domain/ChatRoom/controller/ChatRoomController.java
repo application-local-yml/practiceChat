@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.COMMON;
-import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.KICKED;
+import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.*;
 import static com.ll.chat.domain.ChatMessage.dto.response.SignalType.NEW_MESSAGE;
 import static com.ll.chat.domain.ChatMessage.entity.ChatMessageType.ENTER;
 import static com.ll.chat.domain.ChatMessage.entity.ChatMessageType.LEAVE;
@@ -74,7 +73,7 @@ public class ChatRoomController {
 
         ChatRoomDto chatRoomDto = chatRoomService.getByIdAndUserId(roomId, member.getId());
 
-        if (chatRoomDto.getType().equals(ENTER) || chatRoomDto.getType().equals(LEAVE)){
+        if (chatRoomDto.getType().equals(ROOMIN) || chatRoomDto.getType().equals(EXIT)){
             chatMessageService.createAndSave(" < " + member.getUsername() + "님이 입장하셨습니다. >", member.getId(), roomId, ENTER);
             // Enter 로 들어올 경우!
             SignalResponse signalResponse = SignalResponse.builder()
@@ -82,6 +81,8 @@ public class ChatRoomController {
                     .build();
             template.convertAndSend("/topic/chats/room/" + chatRoom.getId(), signalResponse);
         }
+
+        chatRoomService.updateChatUserType(roomId, member.getId());
 
 
         model.addAttribute("chatRoom", chatRoomDto);

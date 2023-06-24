@@ -1,14 +1,12 @@
 package com.ll.chat.domain.ChatMember.entity;
 
 import com.ll.chat.domain.ChatMessage.entity.ChatMessage;
+import com.ll.chat.domain.ChatMessage.entity.ChatMessageType;
 import com.ll.chat.domain.ChatRoom.entity.ChatRoom;
 import com.ll.chat.domain.Member.entitiy.Member;
 import com.ll.chat.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -23,6 +21,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @SuperBuilder
+@Setter
 @EqualsAndHashCode(of = {"member", "chatRoom"})
 public class ChatMember extends BaseEntity {
     @ManyToOne(fetch = LAZY)
@@ -33,15 +32,16 @@ public class ChatMember extends BaseEntity {
 
     @Builder.Default
     @Enumerated(STRING)
-    private ChatMemberType type = ENTER;
+    private ChatMemberType type = ROOMIN;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     @Builder
-    public ChatMember(Member member, ChatRoom chatRoom) {
+    public ChatMember(Member member, ChatRoom chatRoom, ChatMemberType type) {
         this.member = member;
         this.chatRoom = chatRoom;
+        this.type = type;
     }
 
     public void changeType() {
@@ -49,6 +49,10 @@ public class ChatMember extends BaseEntity {
     }
 
     public void exitType() {
-        this.type = LEAVE;
+        this.type = EXIT;
+    }
+
+    public void changeMemberCommonType() {
+        this.type = COMMON;
     }
 }

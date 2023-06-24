@@ -4,9 +4,11 @@ import com.ll.chat.domain.ChatMember.entity.ChatMember;
 import com.ll.chat.domain.ChatMember.repository.ChatMemberRepository;
 import com.ll.chat.domain.ChatRoom.entity.ChatRoom;
 import com.ll.chat.domain.ChatRoom.repository.ChatRoomRepository;
+import com.ll.chat.domain.Member.entitiy.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -61,5 +63,9 @@ public class ChatMemberService {
         }
 
         return chatMemberRepository.findByChatRoomId(roomId);
+    }
+
+    public ChatMember findByChatRoomAndMember(ChatRoom chatRoom, Member member) {
+        return chatMemberRepository.findByChatRoomAndMember(chatRoom, member);
     }
 }
