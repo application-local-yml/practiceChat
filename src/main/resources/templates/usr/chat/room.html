@@ -104,13 +104,22 @@
         .chat__message-ul li {
             margin-bottom: 10px;
             padding: 10px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: 1px solid #fff;
             width: max-content;
             max-width: 45%;
             word-break: break-all;
         }
+
+        .chat__message-ul li > div {
+            display: grid;
+        }
+
+        .chat__message-ul li .message-content {
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #fff;
+            padding: 9px;
+        }
+
         .chat__message-ul li.sender {
             margin-left: auto;
             text-align: left;
@@ -128,8 +137,14 @@
             text-align: center;
             border-radius: 15px;
         }
-        .chat__message-ul li .message-time {
+        .chat__message-ul li.sender .message-time{
             font-size: 10px; /* 폰트 크기 조정 */
+            text-align: right;
+        }
+
+        .chat__message-ul li.receiver .message-time{
+            font-size: 10px; /* 폰트 크기 조정 */
+            text-align: left;
         }
     </style>
 </head>

@@ -2,6 +2,7 @@ let stompClient = null;
 let fromId = 0;
 let ChatMessageUl = null;
 let ChatMessageTime = null;
+let currentDate = null; // 날짜 변수 추가
 
 function getChatMessages() {
     console.log("fromId : " + fromId);
@@ -14,10 +15,12 @@ function getChatMessages() {
         .then(response => response.json())
         .then(body => {
             drawMessages(body);
+            console.log(body);
         });
 }
 
 function drawMessages(messages) {
+    console.log(messages);
     if (messages.length > 0) {
         fromId = messages[messages.length - 1].message_id;
     }
@@ -50,10 +53,20 @@ function drawMessages(messages) {
             const formattedTime = `${hours}:${minutes}`;
 
             if (message.sender.user_id === memberId) {
-                newItem.innerHTML = `${message.content} <span class="message-time"><${formattedTime}></span>`;
+                newItem.innerHTML = `<div><div class="message-content">${message.content}</div><span class="message-time">${formattedTime}</span></div> `;
             } else {
-                newItem.innerHTML = `${message.sender.username} : ${message.content} <span class="message-time"><${formattedTime}></span>`;
+                newItem.innerHTML = `<div><div class="message-content">${message.sender.username} : ${message.content}</div> <span class="message-time">${formattedTime}</span></div>`;
             }
+        }
+
+        const messageDate = new Date(message.created_at).toLocaleDateString();
+        console.log("currentDate : " + currentDate);
+        if (currentDate !== messageDate) {
+            const newDateItem = document.createElement("li");
+            newDateItem.classList.add("center");
+            newDateItem.textContent = messageDate;
+            ChatMessageUl.appendChild(newDateItem);
+            currentDate = messageDate;
         }
 
         ChatMessageUl.appendChild(newItem);
