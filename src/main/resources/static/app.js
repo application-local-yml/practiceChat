@@ -25,8 +25,7 @@ function drawMessages(messages) {
         fromId = messages[messages.length - 1].message_id;
     }
 
-    messages.forEach((message) => {
-
+    messages.forEach((message, index) => {
         const newItem = document.createElement("li");
         console.log(message);
         console.log("memberId : " + memberId);
@@ -51,6 +50,14 @@ function drawMessages(messages) {
             const hours = String(createdAt.getHours()).padStart(2, '0');
             const minutes = String(createdAt.getMinutes()).padStart(2, '0');
             const formattedTime = `${hours}:${minutes}`;
+
+            // 새로운 메세지를 추가하기 전에 이전 메세지와의 시간을 비교합니다
+            const lastItem = ChatMessageUl.lastChild;
+            const lastItemTimeElement = lastItem && lastItem.querySelector('.message-time');
+
+            if (lastItemTimeElement && lastItemTimeElement.textContent === formattedTime) {
+                lastItemTimeElement.remove();  // .style.visibility = 'hidden'; 대신에 .remove();를 사용합니다
+            }
 
             if (message.sender.user_id === memberId) {
                 newItem.innerHTML = `<div><div class="message-content">${message.content}</div><span class="message-time">${formattedTime}</span></div> `;
