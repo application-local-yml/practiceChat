@@ -19,14 +19,18 @@ function getChatMessages() {
         });
 }
 
+const lastChatMessages = {
+
+};
+
+let lastChatMessageUser = "";
+
 function drawMessages(messages) {
-    console.log(messages);
     if (messages.length > 0) {
         fromId = messages[messages.length - 1].message_id;
     }
 
-    messages.forEach((message) => {
-
+    messages.forEach((message, index) => {
         const newItem = document.createElement("li");
         console.log(message);
         console.log("memberId : " + memberId);
@@ -48,19 +52,44 @@ function drawMessages(messages) {
             const createdAt = new Date(message.created_at);
 
             // 가공된 시간 표시 형식 (MM:SS)
-            const hours = String(createdAt.getHours()).padStart(2, '0');
+            const hours = createdAt.getHours();
+            const period = hours >= 12 ? "오후" : "오전";
+            const displayHours = hours % 12 || 12; // 12시간 단위로 표시
             const minutes = String(createdAt.getMinutes()).padStart(2, '0');
-            const formattedTime = `${hours}:${minutes}`;
+            const formattedTime = `${period} ${displayHours}:${minutes}`;
+
+            if ( lastChatMessages[message.sender.user_id] === undefined ) {
+                lastChatMessages[message.sender.user_id] = {
+                    date: formattedTime,
+                    el: newItem
+                };
+            }
+
+            if ( lastChatMessages[message.sender.user_id].date == formattedTime ) {
+                $(lastChatMessages[message.sender.user_id].el).find('.message-time').remove();
+            }
 
             if (message.sender.user_id === memberId) {
                 newItem.innerHTML = `<div><div class="message-content">${message.content}</div><span class="message-time">${formattedTime}</span></div> `;
             } else {
-                newItem.innerHTML = `<div><div class="message-content">${message.sender.username} : ${message.content}</div> <span class="message-time">${formattedTime}</span></div>`;
+                newItem.innerHTML = `<div><div class="message-username mt-5 mb-1">${message.sender.username}</div><div class="message-content">${message.content}</div> <span class="message-time">${formattedTime}</span></div>`;
+
+                if ( lastChatMessageUser == message.sender.user_id ) {
+                    $(newItem).find('.message-username').remove();
+                }
             }
+
+            lastChatMessageUser = message.sender.user_id;
+
+            lastChatMessages[message.sender.user_id].el = newItem;
+            lastChatMessages[message.sender.user_id].date = formattedTime;
+
         }
 
         const messageDate = new Date(message.created_at).toLocaleDateString();
+
         console.log("currentDate : " + currentDate);
+
         if (currentDate !== messageDate) {
             const newDateItem = document.createElement("li");
             newDateItem.classList.add("center");
