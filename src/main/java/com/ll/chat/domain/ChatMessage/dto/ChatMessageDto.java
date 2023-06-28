@@ -6,6 +6,7 @@ import com.ll.chat.domain.ChatMessage.entity.ChatMessageType;
 import com.ll.chat.domain.Member.dto.MemberDto;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatMessageDto {
+public class ChatMessageDto implements Serializable {
 
     @JsonProperty("message_id")
     private Long id;

@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import static lombok.AccessLevel.PROTECTED;
 @SuperBuilder
 @Setter
 @EqualsAndHashCode(of = {"member", "chatRoom"})
-public class ChatMember extends BaseEntity {
+public class ChatMember extends BaseEntity implements Serializable {
     @ManyToOne(fetch = LAZY)
     private Member member;
 

@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @Entity
 @SuperBuilder
 @EqualsAndHashCode(of = {"id"}, callSuper = true)
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
 
     private String username;
     private String password;

@@ -9,6 +9,8 @@ import com.ll.chat.domain.ChatRoom.entity.ChatRoom;
 import com.ll.chat.domain.ChatRoom.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheManager = "cacheManager")
 @Slf4j
 @Transactional
 public class ChatMessageService {
@@ -24,6 +27,7 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
 
+    @Cacheable(value = "chat-message", key = "#chatRoomId + '_' + #senderId + '_' + #content")
     public ChatMessage createAndSave(String content, Long senderId, Long chatRoomId, ChatMessageType type) {
 
         ChatRoom chatRoom = chatRoomService.findById(chatRoomId);

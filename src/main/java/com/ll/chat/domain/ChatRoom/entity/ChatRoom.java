@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.util.Assert;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +32,9 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @SuperBuilder
 @EqualsAndHashCode(of = {"id"}, callSuper = true)
-public class ChatRoom extends BaseEntity {
+public class ChatRoom extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
 

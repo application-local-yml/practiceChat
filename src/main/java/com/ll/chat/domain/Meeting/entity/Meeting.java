@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -18,7 +19,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @NoArgsConstructor
 @SuperBuilder
-public class Meeting extends BaseEntity {
+public class Meeting extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
