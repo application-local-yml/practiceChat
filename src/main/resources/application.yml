@@ -5,3 +5,12 @@ spring:
         enabled: true
   profiles:
     active: local
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 2

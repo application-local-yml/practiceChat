@@ -14,6 +14,9 @@ import com.ll.chat.global.rsData.RsData;
 import com.ll.chat.global.security.SecurityMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import java.util.Optional;
 import static com.ll.chat.domain.ChatMember.entity.ChatMemberType.KICKED;
 
 @Service
+@CacheConfig(cacheManager = "cacheManager")
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
@@ -61,6 +65,7 @@ public class ChatRoomService {
     }
 
     @Transactional
+    @Cacheable(value = "chatroom", key = "#roomId + '_' + #memberId")
     public ChatRoomDto getByIdAndUserId(Long roomId, long memberId) {
         Member member = memberService.findByIdElseThrow(memberId);
 
@@ -121,6 +126,7 @@ public class ChatRoomService {
      * 채팅방 삭제
      */
     @Transactional
+    @CacheEvict(value = "chatroom", allEntries=true)
     public void remove(Long roomId, Long OwnerId) {
         Member owner = memberService.findByIdElseThrow(OwnerId);
         log.info("roomId = {}", roomId);
