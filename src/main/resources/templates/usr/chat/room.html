@@ -171,7 +171,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{|/usr/chat/inviteList|}" th:if="${@rq.login} and ${@rq.getMember().username} == ${member.username}">
+                                <a th:href="@{|/usr/chat/${chatRoom.id}/inviteList|}" th:if="${@rq.login} and ${@rq.getMember().username} == ${member.username}">
                                     <span>초대 목록</span>
                                 </a>
                             </li>

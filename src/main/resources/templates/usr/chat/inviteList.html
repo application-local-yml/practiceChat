@@ -27,7 +27,8 @@
       <tr th:each="member, loop : ${memberList}">
         <td th:text="${member.id}"></td>
         <td th:text="${member.username}"></td>
-        <td><a class="border m-3">초대</a></td>
+        <td><a th:href="@{/usr/chat/{roomId}/inviteMember/{memberId}(roomId=${roomId}, memberId=${member.id})}"
+               class="border p-2">초대</a></td>
       </tr>
       </tbody>
     </table>

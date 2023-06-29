@@ -10,6 +10,9 @@ import com.ll.chat.domain.ChatRoom.repository.ChatRoomRepository;
 import com.ll.chat.domain.Meeting.entity.Meeting;
 import com.ll.chat.domain.Member.entitiy.Member;
 import com.ll.chat.domain.Member.service.MemberService;
+import com.ll.chat.domain.notification.entity.Notification;
+import com.ll.chat.domain.notification.repository.NotificationRepository;
+import com.ll.chat.global.event.EventAfterInvite;
 import com.ll.chat.global.rsData.RsData;
 import com.ll.chat.global.security.SecurityMember;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,8 @@ public class ChatRoomService {
     private final MemberService memberService;
     private final ChatMemberService chatMemberService;
     private final SimpMessageSendingOperations template;
+    private final NotificationRepository notificationRepository;
+    private final ApplicationEventPublisher publisher;
 
 
     @Transactional
@@ -248,5 +254,41 @@ public class ChatRoomService {
         Long commonParticipantsCount = getCommonParticipantsCount(chatRoom);
         log.info("commonParticipantsCount = {} ", commonParticipantsCount);
         chatRoom.getMeeting().setParticipantsCount(commonParticipantsCount);
+    }
+
+    @Transactional
+    public RsData<Member> inviteMember(Long roomId, SecurityMember member, Long memberId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+
+        // 현재 로그인된 사용자가 방에 있는지 확인하는 로직
+        Long currentMemberId = member.getId();
+        Member currentMember = memberService.findById(currentMemberId);
+        ChatMember chatMemberByMemberId = findChatMemberByMemberId(chatRoom, currentMemberId);
+
+        // return 값 바꿀 거면 수정하기
+        if (chatMemberByMemberId == null){
+            return RsData.of("F-1", "현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
+        }
+
+        Member invitedMember = memberService.findById(memberId);
+
+        // 알림 저장
+        Notification notification = Notification.builder()
+                .invitedMember(invitedMember)
+                .invitingMember(currentMember)
+                .matchingName(chatRoom.getName())
+                .build();
+
+        notificationRepository.save(notification);
+
+        // TODO: 멤버 초대 알림 로직 ( eventListener 추가 )
+
+        publisher.publishEvent(new EventAfterInvite(this, invitedMember));
+
+
+        return RsData.of("S-1", "%s 님에게 초대를 보냈습니다".formatted(invitedMember.getUsername()));
+
+
     }
 }

@@ -175,13 +175,25 @@ public class ChatRoomController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/inviteList")
-    public String inviteList(Model model) {
+    @GetMapping("/{roomId}/inviteList")
+    public String inviteList(Model model, @PathVariable Long roomId) {
         List<Member> memberList = memberService.findAll();
         log.info("memberList = {}", memberList);
+        model.addAttribute("roomId", roomId);
         model.addAttribute("memberList", memberList);
 
         return "usr/chat/inviteList";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{roomId}/inviteMember/{memberId}")
+    public String inviteMember(@PathVariable Long roomId, @AuthenticationPrincipal SecurityMember member,
+                               @PathVariable Long memberId){
+        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        chatRoomService.inviteMember(roomId, member, memberId);
+
+        return "redirect:/usr/chat/{roomId}/inviteList";
+    }
+
 
 }
