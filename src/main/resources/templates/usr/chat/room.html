@@ -171,6 +171,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a th:href="@{|/usr/chat/inviteList|}" th:if="${@rq.login} and ${@rq.getMember().username} == ${member.username}">
+                                    <span>초대 목록</span>
+                                </a>
+                            </li>
+                            <li>
                                 <form th:action="@{/usr/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()">
                                     <input type="hidden" name="_method" value="delete">
                                     <button>나가기</button>

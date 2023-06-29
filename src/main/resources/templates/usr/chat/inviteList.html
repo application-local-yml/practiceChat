@@ -1,0 +1,37 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
+<head>
+  <title>유저 목록</title>
+  <style>
+    .table {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+
+<body>
+
+<main layout:fragment="main">
+  <div style="display: flex; justify-content: center;">
+    <table class="table">
+      <thead class="table-dark">
+      <tr>
+        <th>회원 번호</th>
+        <th>회원 이름</th>
+        <th>초대</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="member, loop : ${memberList}">
+        <td th:text="${member.id}"></td>
+        <td th:text="${member.username}"></td>
+        <td><a class="border m-3">초대</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

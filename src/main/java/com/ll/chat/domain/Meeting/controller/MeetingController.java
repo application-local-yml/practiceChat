@@ -7,6 +7,8 @@ import com.ll.chat.domain.ChatRoom.service.ChatRoomService;
 import com.ll.chat.domain.Meeting.MeetingForm;
 import com.ll.chat.domain.Meeting.entity.Meeting;
 import com.ll.chat.domain.Meeting.service.MeetingService;
+import com.ll.chat.domain.Member.entitiy.Member;
+import com.ll.chat.domain.Member.service.MemberService;
 import com.ll.chat.global.rq.Rq;
 import com.ll.chat.global.rsData.RsData;
 import com.ll.chat.global.security.SecurityMember;
@@ -39,6 +41,7 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final ChatRoomService chatRoomService;
     private final ChatMemberService chatMemberService;
+    private final MemberService memberService;
 
     @GetMapping("/list")
     public String showList(Model model, @RequestParam(value="page", defaultValue="0") int page) {

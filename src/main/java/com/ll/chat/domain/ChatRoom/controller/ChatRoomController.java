@@ -8,6 +8,8 @@ import com.ll.chat.domain.ChatRoom.dto.ChatRoomDto;
 import com.ll.chat.domain.ChatRoom.entity.ChatRoom;
 import com.ll.chat.domain.ChatRoom.service.ChatRoomService;
 import com.ll.chat.domain.Meeting.entity.Meeting;
+import com.ll.chat.domain.Member.entitiy.Member;
+import com.ll.chat.domain.Member.service.MemberService;
 import com.ll.chat.global.rq.Rq;
 import com.ll.chat.global.rsData.RsData;
 import com.ll.chat.global.security.SecurityMember;
@@ -38,6 +40,7 @@ public class ChatRoomController {
     private final ChatMessageService chatMessageService;
     private final SimpMessageSendingOperations template;
     private final ChatMemberService chatMemberService;
+    private final MemberService memberService;
 
     /**
      * 방 조회
@@ -156,6 +159,7 @@ public class ChatRoomController {
     @GetMapping("/{roomId}/memberList")
     public String memberList(Model model, @PathVariable Long roomId,
                              @AuthenticationPrincipal SecurityMember member) {
+        List<Member> memberList = memberService.findAll();
         List<ChatMember> chatMemberList = chatMemberService.findByChatRoomIdAndChatMember(roomId, member.getId());
         ChatRoom chatRoom = chatRoomService.findById(roomId);
 
@@ -165,7 +169,19 @@ public class ChatRoomController {
 
         model.addAttribute("chatMemberList", chatMemberList);
         model.addAttribute("chatRoom", chatRoom);
+        model.addAttribute("memberList", memberList);
         model.addAttribute("COMMON", COMMON);
         return "usr/chat/memberList";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/inviteList")
+    public String inviteList(Model model) {
+        List<Member> memberList = memberService.findAll();
+        log.info("memberList = {}", memberList);
+        model.addAttribute("memberList", memberList);
+
+        return "usr/chat/inviteList";
+    }
+
 }
